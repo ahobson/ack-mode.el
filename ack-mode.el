@@ -70,7 +70,8 @@
     (switch-to-buffer-other-window buf)))
 
 (defun ack-start-ack-process (search-string dir)
-  (let ((buf (generate-new-buffer (format "*ack \"%s\"*" search-string))))
+  (let ((buf (generate-new-buffer (format "*ack \"%s\"*" search-string)))
+        (local-ack-arguments ack-arguments))
     (save-current-buffer
       (set-buffer buf)
       (ack-mode)
@@ -83,7 +84,7 @@
       (font-lock-mode 1)
 
       (let ((proc (apply 'start-process (buffer-name buf) buf
-			 ack-program-name (append ack-arguments (list search-string)))))
+			 ack-program-name (append local-ack-arguments (list search-string)))))
 	(set-process-filter   proc 'ack-process-filter)
 	(set-process-sentinel proc 'ack-process-sentinel)))
     buf))
